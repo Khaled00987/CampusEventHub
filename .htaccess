@@ -1,0 +1,27 @@
+# Campus EventHub — Apache config (XAMPP + live hosting)
+# Works in any htdocs subfolder without hardcoding the folder name.
+
+# Hide directory listings; load root index.php first
+Options -Indexes
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Block sensitive directories
+    RewriteRule ^(app|database|docs|tests)(/|$) - [F,L]
+
+    # Serve static files from public/assets/ (URL: /YourFolder/assets/...)
+    RewriteRule ^assets/(.*)$ public/assets/$1 [L]
+
+    # Front controller (skip if index.php already handling the request)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ public/index.php [QSA,L]
+</IfModule>
+
+<Files ".env">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</Files>
