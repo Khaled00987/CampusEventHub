@@ -1,10 +1,10 @@
-# Test Cases — Campus EventHub
+# Test Cases: Campus EventHub
 
 Use with `tests/manual-test-checklist.md` and `tests/test-results-template.md`.
 
----
+Record **Actual result** and **Pass/Fail** during manual testing on XAMPP.
 
-## TC-AUTH-01 — Login success (admin)
+## TC-AUTH-01: Login success (admin)
 
 | Field | Value |
 |-------|-------|
@@ -15,9 +15,7 @@ Use with `tests/manual-test-checklist.md` and `tests/test-results-template.md`.
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-AUTH-02 — Login success (user)
+## TC-AUTH-02: Login success (user)
 
 | Field | Value |
 |-------|-------|
@@ -28,22 +26,18 @@ Use with `tests/manual-test-checklist.md` and `tests/test-results-template.md`.
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-AUTH-03 — Login failure
+## TC-AUTH-03: Login failure
 
 | Field | Value |
 |-------|-------|
 | **ID** | TC-AUTH-03 |
 | **Feature** | Authentication |
-| **Steps** | 1. Login with wrong password 1–2 times. |
-| **Expected result** | Error message; account not logged in. After 5 failures, lockout message. |
+| **Steps** | 1. Login with wrong password several times. |
+| **Expected result** | Error message; account not logged in. After repeated failures, lockout message. |
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-REG-01 — Register validation
+## TC-REG-01: Register validation
 
 | Field | Value |
 |-------|-------|
@@ -54,22 +48,18 @@ Use with `tests/manual-test-checklist.md` and `tests/test-results-template.md`.
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-EVT-01 — Admin create event
+## TC-EVT-01: Admin create event
 
 | Field | Value |
 |-------|-------|
 | **ID** | TC-EVT-01 |
 | **Feature** | Events CRUD |
-| **Steps** | 1. Admin → Create event. 2. Fill required fields. 3. Set status Published. 4. Save. |
+| **Steps** | 1. Admin: Create event. 2. Fill required fields. 3. Set status Published. 4. Save. |
 | **Expected result** | Event appears in admin list and public `/events`. Activity log `event_created`. |
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-EVT-02 — Admin edit event
+## TC-EVT-02: Admin edit event
 
 | Field | Value |
 |-------|-------|
@@ -80,22 +70,18 @@ Use with `tests/manual-test-checklist.md` and `tests/test-results-template.md`.
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-EVT-03 — Event search and filter
+## TC-EVT-03: Event search and filter
 
 | Field | Value |
 |-------|-------|
 | **ID** | TC-EVT-03 |
 | **Feature** | Events listing |
 | **Steps** | 1. Open `/events`. 2. Search partial title. 3. Filter category and Upcoming. |
-| **Expected result** | Only matching published events shown; pagination works if >10 results. |
+| **Expected result** | Only matching published events shown; pagination works if more than 10 results. |
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-TKT-01 — Ticket request success
+## TC-TKT-01: Ticket request success
 
 | Field | Value |
 |-------|-------|
@@ -106,61 +92,51 @@ Use with `tests/manual-test-checklist.md` and `tests/test-results-template.md`.
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-TKT-02 — Duplicate ticket request blocked
+## TC-TKT-02: Duplicate ticket request blocked
 
 | Field | Value |
 |-------|-------|
 | **ID** | TC-TKT-02 |
 | **Feature** | Tickets |
-| **Steps** | 1. Request ticket for same event again while pending/approved. |
+| **Steps** | 1. Request ticket for same event again while pending or approved. |
 | **Expected result** | Error message; second request not created. |
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-TKT-03 — Capacity check
+## TC-TKT-03: Capacity check
 
 | Field | Value |
 |-------|-------|
 | **ID** | TC-TKT-03 |
 | **Feature** | Tickets |
-| **Steps** | 1. Admin approves tickets until capacity full. 2. Try approve one more. |
+| **Steps** | 1. Admin approves tickets until capacity is full. 2. Try to approve one more. |
 | **Expected result** | Approval blocked with capacity error. |
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-TKT-04 — Admin approve ticket
+## TC-TKT-04: Admin approve ticket
 
 | Field | Value |
 |-------|-------|
 | **ID** | TC-TKT-04 |
 | **Feature** | Tickets |
-| **Steps** | 1. Admin → Tickets → pending request → Approve. |
+| **Steps** | 1. Admin: Tickets, open pending request, Approve. |
 | **Expected result** | Status `approved`; activity `ticket_approved`. |
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-AI-01 — AI draft generated but not auto-saved
+## TC-AI-01: AI draft generated but not auto-saved
 
 | Field | Value |
 |-------|-------|
 | **ID** | TC-AI-01 |
 | **Feature** | AI Event Draft |
-| **Steps** | 1. Admin → AI Draft. 2. Generate draft. 3. Edit fields. 4. Accept Reviewed Draft. 5. Check `events` table. |
+| **Steps** | 1. Admin: AI Draft. 2. Generate draft. 3. Edit fields. 4. Accept Reviewed Draft. 5. Check `events` table. |
 | **Expected result** | `ai_logs` has row with `accepted=1` and `final_text`; **no** new event row auto-created. Disclaimer visible. |
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-AI-02 — Help assistant fallback
+## TC-AI-02: Help assistant fallback
 
 | Field | Value |
 |-------|-------|
@@ -171,93 +147,90 @@ Use with `tests/manual-test-checklist.md` and `tests/test-results-template.md`.
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-AI-03 — Help assistant no match
+## TC-AI-03: Help assistant no match
 
 | Field | Value |
 |-------|-------|
 | **ID** | TC-AI-03 |
 | **Feature** | Smart Help Assistant |
-| **Steps** | 1. Ask unrelated question e.g. "What is the weather?" |
-| **Expected result** | Exact message: "Sorry, I could not find an exact answer. Please contact an administrator." |
+| **Steps** | 1. Ask unrelated question, e.g. "What is the weather?" |
+| **Expected result** | Message: "Sorry, I could not find an exact answer. Please contact an administrator." |
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-IMG-01 — Admin uploads valid JPG event image
+## TC-IMG-01: Admin uploads valid JPG event image
 
 | Field | Value |
 |-------|-------|
 | **ID** | TC-IMG-01 |
 | **Feature** | Event image upload |
-| **Steps** | 1. Log in as admin. 2. Create event with JPG under 2MB. 3. Save. 4. View event on public site. |
+| **Steps** | 1. Login as admin. 2. Create event with JPG under 2 MB. 3. Save. 4. View event on public site. |
 | **Expected result** | Image saved in `public/assets/images/events/`; displays on listing and detail via `event_image()`. |
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-IMG-02 — Admin uploads invalid file type
+## TC-IMG-02: Admin uploads invalid file type
 
 | Field | Value |
 |-------|-------|
 | **ID** | TC-IMG-02 |
 | **Feature** | Event image upload validation |
-| **Steps** | 1. Log in as admin. 2. Try to upload `.pdf` or `.exe` as event image. |
-| **Expected result** | Friendly validation error; event not saved with bad file. |
+| **Steps** | 1. Login as admin. 2. Try to upload `.pdf` or `.exe` as event image. |
+| **Expected result** | Validation error; event not saved with invalid file. |
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-PDF-01 — User cannot download pending ticket PDF
+## TC-PDF-01: User cannot download pending ticket PDF
 
 | Field | Value |
 |-------|-------|
 | **ID** | TC-PDF-01 |
 | **Feature** | Ticket PDF access control |
-| **Steps** | 1. Log in as user with a **pending** ticket. 2. Open `/tickets/{id}/download` directly. |
-| **Expected result** | Redirect with error; no PDF file. My Tickets shows "PDF available after approval". |
+| **Steps** | 1. Login as user with a **pending** ticket. 2. Open `/tickets/{id}/download` directly. |
+| **Expected result** | Redirect with error; no PDF. My Tickets shows PDF only after approval. |
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-PDF-02 — User downloads approved ticket PDF
+## TC-PDF-02: User downloads approved ticket PDF
 
 | Field | Value |
 |-------|-------|
 | **ID** | TC-PDF-02 |
 | **Feature** | Ticket PDF download |
-| **Steps** | 1. Log in as `user@eventhub.test`. 2. My Tickets → approved row → Download Ticket PDF. |
-| **Expected result** | PDF downloads as `ticket_CEH-{id}-{event}-{user}.pdf`; shows event details, attendee, ticket code, disclaimer. |
+| **Steps** | 1. Login as `user@eventhub.test`. 2. My Tickets, approved row, Download Ticket PDF. |
+| **Expected result** | PDF downloads as `ticket_CEH-{id}-{event}-{user}.pdf`; shows event, attendee, ticket code, disclaimer. |
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-PDF-03 — User cannot download another user's ticket
+## TC-PDF-03: User cannot download another user's ticket
 
 | Field | Value |
 |-------|-------|
 | **ID** | TC-PDF-03 |
 | **Feature** | Ticket PDF authorization |
-| **Steps** | 1. Log in as user A. 2. Request URL for user B's ticket ID. |
+| **Steps** | 1. Login as user A. 2. Request URL for user B's ticket ID. |
 | **Expected result** | HTTP 403 Forbidden. |
 | **Actual result** | |
 | **Pass/Fail** | |
 
----
-
-## TC-PDF-04 — PDF content and missing image safety
+## TC-PDF-04: PDF content and missing image safety
 
 | Field | Value |
 |-------|-------|
 | **ID** | TC-PDF-04 |
 | **Feature** | Ticket PDF layout |
 | **Steps** | 1. Download approved ticket PDF. 2. Repeat for event with no image file. |
-| **Expected result** | PDF includes logo, title, date, location, attendee name, ticket code; no overlapping text; generates without fatal error if image missing. |
+| **Expected result** | PDF includes logo, title, date, location, attendee name, ticket code; generates without fatal error if image missing. |
+| **Actual result** | |
+| **Pass/Fail** | |
+
+## TC-SEC-01: User blocked from admin area
+
+| Field | Value |
+|-------|-------|
+| **ID** | TC-SEC-01 |
+| **Feature** | Authorization |
+| **Steps** | 1. Login as standard user. 2. Open `/admin/events` directly. |
+| **Expected result** | HTTP 403 or redirect; no admin data shown. |
 | **Actual result** | |
 | **Pass/Fail** | |

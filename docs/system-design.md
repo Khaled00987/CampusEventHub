@@ -1,20 +1,20 @@
-# System Design — Campus EventHub
+# System Design: Campus EventHub
 
-## Client–server–database architecture
+## Client, server, and database
 
 ```
 [ Browser ]
-    │  HTTP (GET/POST + CSRF token)
-    ▼
-[ Apache + .htaccess ] → public/index.php
-    ▼
-[ Router ] → [ Controller ] → [ Model / Service ] → [ MySQL ]
-                │
-                ▼
-            [ PHP Views + HTML/CSS/JS ]
+    |  HTTP (GET/POST + CSRF token)
+    v
+[ Apache + .htaccess ] -> public/index.php
+    v
+[ Router ] -> [ Controller ] -> [ Model / Service ] -> [ MySQL ]
+                |
+                v
+            [ PHP views + HTML/CSS/JS ]
 ```
 
-The browser never talks to MySQL directly. All data access goes through PHP models using PDO.
+The browser does not connect to MySQL directly. All data access goes through PHP models using PDO.
 
 ## MVC-lite structure
 
@@ -24,20 +24,20 @@ The browser never talks to MySQL directly. All data access goes through PHP mode
 | `app/core/` | Router, Auth, CSRF, Validator, Session, Helpers |
 | `app/controllers/` | HTTP actions per feature |
 | `app/models/` | SQL queries (prepared statements) |
-| `app/services/` | LongcatService (external AI) |
+| `app/services/` | LongcatService, EventImageUpload, TicketPdfService |
 | `app/views/` | HTML templates |
 | `public/` | Entry point and static assets |
 
-## ERD (text description)
+## Entity relationships (text)
 
-- **users** 1—* **events** (created_by, updated_by)
-- **users** 1—* **ticket_requests** *—1 **events**
-- **users** 1—* **announcements**
-- **users** 1—* **activity_logs** (nullable user_id)
-- **users** 1—* **ai_logs**
-- **faq_items** — standalone reference for help assistant
+- **users** one-to-many **events** (`created_by`, `updated_by`)
+- **users** one-to-many **ticket_requests**, each ticket many-to-one **events**
+- **users** one-to-many **announcements**
+- **users** one-to-many **activity_logs** (`user_id` nullable for system actions)
+- **users** one-to-many **ai_logs**
+- **faq_items** standalone table for the help assistant
 
-Deleting an event with tickets is blocked in application logic (FK CASCADE exists but UI prevents delete).
+Deleting an event that still has tickets is blocked in application logic.
 
 ## Tables
 
@@ -53,32 +53,37 @@ Deleting an event with tickets is blocked in application logic (FK CASCADE exist
 
 ## Route list
 
+Defined in `public/index.php`.
+
 | Method | Path | Controller action |
 |--------|------|-------------------|
-| GET | / | AdminController@home |
-| GET/POST | /login, /register, /logout | AuthController |
-| GET | /dashboard | DashboardController@index |
-| GET | /events, /events/{slug} | EventController |
-| POST | /events/{id}/request-ticket | EventController |
-| GET | /my-tickets | TicketController |
-| GET | /announcements | AnnouncementController |
-| GET/POST | /help-assistant, /help-assistant/ask | AiController |
-| GET/POST | /admin/events/* | AdminController |
-| GET/POST | /admin/tickets/* | TicketController |
-| GET/POST | /admin/announcements/* | AnnouncementController |
-| GET/POST | /admin/ai-draft/* | AiController |
-| GET | /admin/ai-logs, /admin/activity-logs | AiController, AdminController |
+| GET | `/` | AdminController@home |
+| GET/POST | `/login`, `/register`, `/logout` | AuthController |
+| GET | `/dashboard` | DashboardController@index |
+| GET | `/events`, `/events/{slug}` | EventController |
+| POST | `/events/{id}/request-ticket` | EventController@requestTicket |
+| GET | `/my-tickets` | TicketController@myTickets |
+| GET | `/tickets/{id}/download` | TicketController@download |
+| GET | `/announcements` | AnnouncementController@index |
+| GET | `/about` | AdminController@about |
+| GET/POST | `/help-assistant`, `/help-assistant/ask` | AiController |
+| GET/POST | `/admin/events/*` | AdminController |
+| GET/POST | `/admin/tickets/*` | TicketController |
+| GET/POST | `/admin/announcements/*` | AnnouncementController |
+| GET/POST | `/admin/ai-draft/*` | AiController |
+| GET | `/admin/ai-logs` | AiController@aiLogs |
+| GET | `/admin/activity-logs` | AdminController@activityLogs |
 
 ## Security design
 
 - **Authentication:** bcrypt passwords, session regeneration on login, idle timeout.
 - **Authorization:** `Auth::requireAdmin()` on admin routes.
-- **Input:** Server `Validator` + client `validation.js`.
-- **Output:** `e()` escaping in all views.
-- **CSRF:** Token on every POST form.
-- **SQL:** Prepared statements only in models.
-- **AI:** No auto-publish; FAQ-only help; no ticket PII to API.
-- **Files:** Block web access to `app/`, `database/`, `docs/` via `.htaccess`.
+- **Input:** server `Validator` plus client `validation.js`.
+- **Output:** `e()` escaping in views.
+- **CSRF:** token on every POST form.
+- **SQL:** prepared statements only in models.
+- **AI:** no auto-publish; FAQ-only help; no ticket PII to API.
+- **Files:** `.htaccess` blocks web access to `app/`, `database/`, and `docs/`.
 
 ## Universal URLs
 

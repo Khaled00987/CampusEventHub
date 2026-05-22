@@ -3,18 +3,25 @@
 Campus EventHub uses [FPDF](http://www.fpdf.org/) for ticket PDF downloads.
 
 - **Location:** `app/lib/fpdf/fpdf.php`
-- **Fonts:** `app/lib/fpdf/font/` (Helvetica family — required)
-- **No Composer required** — included directly from `TicketPdfService.php`
-- **License:** FPDF is free software; see FPDF website for terms
+- **Fonts:** `app/lib/fpdf/font/` (Helvetica family, required)
+- **No Composer:** loaded from `app/services/TicketPdfService.php`
+- **License:** FPDF free software; see the FPDF website for terms
 
-## Install core fonts (required once)
+## Install core fonts (once per machine)
 
-If PDF download shows a missing `helveticab.php` error, run from the project root:
+If PDF download reports a missing `helveticab.php` error, run from the project root:
 
 ```bash
 php app/lib/fpdf/install-fonts.php
 ```
 
-Fonts are also auto-downloaded on first PDF generation when PHP can reach GitHub.
+Fonts may also download automatically on first PDF generation when PHP can reach GitHub.
 
-Ticket PDFs are generated on demand when a user or admin downloads an approved ticket.
+## When PDFs are generated
+
+- Route: `GET /tickets/{id}/download` (`TicketController@download`)
+- **Users:** approved tickets they own
+- **Admins:** any approved ticket from admin ticket detail
+- Output filename: `ticket_CEH-{ticket_id}-{event_id}-{user_id}.pdf`
+
+Generation is on demand; PDF files are not stored on disk.

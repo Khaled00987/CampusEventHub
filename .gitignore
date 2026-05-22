@@ -2,5 +2,13 @@
 .idea/
 .vscode/
 *.log
+*.tmp
+*.bak
 Thumbs.db
 .DS_Store
+desktop.ini
+
+# Local dev / upload artifacts (keep folder via .gitkeep)
+/scripts/
+public/assets/images/events/*
+!public/assets/images/events/.gitkeep
