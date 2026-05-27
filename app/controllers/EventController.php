@@ -21,10 +21,15 @@ class EventController extends Controller
     /** Public event list with search, filter, pagination */
     public function index(): void
     {
+        $dateFilter = (string) ($_GET['date_filter'] ?? 'all');
+        if (!in_array($dateFilter, ['upcoming', 'past', 'all'], true)) {
+            $dateFilter = 'all';
+        }
+
         $filters = [
             'q' => $_GET['q'] ?? '',
             'category' => $_GET['category'] ?? '',
-            'date_filter' => $_GET['date_filter'] ?? 'upcoming',
+            'date_filter' => $dateFilter,
             'page' => $_GET['page'] ?? 1,
         ];
         $result = $this->events->paginatePublic($filters);

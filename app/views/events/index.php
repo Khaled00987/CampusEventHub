@@ -16,9 +16,9 @@ require APP_PATH . '/views/partials/page-banner.php';
         <?php endforeach; ?>
     </select>
     <select name="date_filter" aria-label="Date">
-        <option value="upcoming" <?= ($filters['date_filter'] ?? 'upcoming') === 'upcoming' ? 'selected' : '' ?>>Upcoming</option>
+        <option value="upcoming" <?= ($filters['date_filter'] ?? '') === 'upcoming' ? 'selected' : '' ?>>Upcoming</option>
         <option value="past" <?= ($filters['date_filter'] ?? '') === 'past' ? 'selected' : '' ?>>Past</option>
-        <option value="all" <?= ($filters['date_filter'] ?? '') === 'all' ? 'selected' : '' ?>>All dates</option>
+        <option value="all" <?= ($filters['date_filter'] ?? 'all') === 'all' ? 'selected' : '' ?>>All dates</option>
     </select>
     <button type="submit" class="btn btn-primary">Apply filters</button>
 </form>
