@@ -1,221 +1,187 @@
 # Campus EventHub
 
-A university club and campus events web application submitted as a student assessment project. Administrators manage events, tickets, and announcements. Students browse events and request tickets. Optional **Longcat AI** helps with event drafts and help text. All AI output requires **human review** before anything is saved or published.
+## 1. Project Overview
 
-## Overview
+Campus EventHub is a PHP and MySQL web application for campus events, ticket requests, announcements, PDF tickets, and responsible AI assistance. It is built with an MVC-lite structure and focuses on secure, practical workflows for event organisers and students.
 
-Campus EventHub includes:
+The platform supports three user groups: public visitors, standard users, and administrators. Public visitors can explore published content, standard users can request and track tickets, and administrators can manage events, tickets, announcements, and AI-supported drafting with human review.
 
-- Secure authentication with **admin** and **user** roles
-- Full **Events** and **Announcements** CRUD for administrators
-- Ticket request workflow with approval and capacity checks
-- Search, filter, and pagination on main lists
-- Activity audit logs and AI usage logs
-- **Smart Help Assistant** (FAQ-based)
-- **AI Event Draft Assistant** (admin, human-in-the-loop)
+## 2. Assessment Context
 
-The application runs on **XAMPP** without Composer or Laravel. It can also deploy to shared hosting using the included `.htaccess` rules.
+This project is submitted for:
 
-## Features
+| Item | Value |
+|------|-------|
+| Unit | ICT203 Web Application Development |
+| Assessment | Assessment 3 |
+| Assessment Type | Full-Stack Web Application with Responsible AI Integration |
 
-| Area | Details |
-|------|---------|
-| Auth | Register (users only), login, logout, rate limiting, CSRF |
-| Events | Public listing; admin CRUD; slug URLs; image upload (JPG, PNG, WEBP, max 2 MB) |
-| Tickets | Request, duplicate block, admin approve/reject, capacity check, PDF download for approved tickets |
-| Announcements | Admin CRUD; public published list |
-| Dashboards | Admin stats and shortcuts; user tickets and upcoming events |
-| AI | Event draft and help assistant with local fallback when API keys are empty |
-| Security | PDO prepared statements, XSS escaping, role checks, audit logs |
+## 3. Team Members
 
-## Tech stack
+| Name | Student ID | Responsibility |
+|------|------------|----------------|
+| Khaled Hasan | CIHE250337 | Team Lead / Scrum Master |
+| Sunir | CIHE240723 | Front-End Lead |
+| Salman Shoshe | CIHE231333 | Back-End and Data/QA Lead |
 
-- PHP 8+
-- MySQL (InnoDB, utf8mb4)
-- PDO (prepared statements)
-- HTML, CSS, JavaScript
-- Apache `mod_rewrite`
-- Optional Longcat API (cURL)
-- FPDF (bundled in `app/lib/fpdf/` for ticket PDFs)
+## 4. Main Features
 
-## Setup (XAMPP)
+| Feature | Description |
+|---------|-------------|
+| Authentication | User registration, login, logout, session-based access control |
+| Role-based access | Admin and standard user permissions with protected admin routes |
+| Events management | Public event listing and full admin CRUD |
+| Event image upload | Admin upload from device with validation and secure storage |
+| Ticket request workflow | User request flow with admin review and status updates |
+| PDF ticket download | Approved ticket PDF generation with ownership checks |
+| Announcements | Admin CRUD and public announcements page |
+| Smart Help Assistant | FAQ/knowledge-base based assistant with optional AI polishing |
+| AI Event Draft Assistant | Admin-only draft generation with required human review |
+| Activity logs and AI logs | Auditable records for operational actions and AI interactions |
+| Responsive UI | Mobile-friendly public pages and dashboard drawer layout |
 
-### 1. Copy the project
+## 5. Technology Stack
 
-Place the folder in `htdocs` (any folder name works, for example `CampusEventHub`).
+| Technology | Purpose |
+|------------|---------|
+| PHP 8+ | Server-side logic and MVC-lite application structure |
+| MySQL | Relational database for users, events, tickets, announcements, and logs |
+| PDO | Secure database access with prepared statements |
+| HTML/CSS/JavaScript | User interface, styling, and client-side interaction |
+| Sessions | Authentication state, flash messages, and security flow support |
+| FPDF | On-demand approved ticket PDF generation |
+| Optional AI API | Responsible AI features for help and event draft support |
+| XAMPP/Apache | Local development runtime and live hosting compatibility |
 
-### 2. Environment file
+## 6. Folder Structure
 
 ```text
-copy .env.example .env
+app/
+  config/
+  core/
+  controllers/
+  models/
+  services/
+  views/
+public/
+  assets/
+database/
+docs/
+tests/
 ```
 
-Edit `.env` if your MySQL password is not empty:
+## 7. Environment Setup
+
+Copy `.env.example` to `.env`, then set local values for your environment.
 
 ```env
+APP_NAME="Campus EventHub"
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=
 DB_HOST=127.0.0.1
+DB_PORT=3306
 DB_NAME=campus_eventhub
 DB_USER=root
 DB_PASS=
+SESSION_LIFETIME=120
+LOGIN_MAX_ATTEMPTS=5
+LOGIN_LOCK_MINUTES=5
+AI_PROVIDER=api
+AI_FALLBACK=true
+AI_API_KEY=
+AI_API_URL=
+AI_MODEL=
 ```
 
-Leave `LONGCAT_API_KEY` and `LONGCAT_API_URL` empty to use **local fallback** (recommended for local testing).
+The codebase currently includes optional provider-specific variables such as `LONGCAT_API_KEY`, `LONGCAT_API_URL`, and `LONGCAT_MODEL`. Keep all API variables private and never commit real values.
 
-### 3. Database
+## 8. XAMPP Installation Steps
 
-1. Start **Apache** and **MySQL** in XAMPP.
-2. Open phpMyAdmin: `http://localhost/phpmyadmin`
-3. Import `database/schema.sql`
-4. Import `database/seed.sql`
+1. Copy the project folder to `htdocs`.
+2. Start Apache and MySQL in XAMPP.
+3. Create a database named `campus_eventhub`.
+4. Import `database/schema.sql`.
+5. Import `database/seed.sql`.
+6. Copy `.env.example` to `.env` and update DB details.
+7. Open the project in the browser.
 
-See `database/README.md` for CLI commands and migration notes.
+Example URLs:
 
-### 4. Apache rewrite
+| URL | Note |
+|-----|------|
+| `http://localhost/campusEventHub/` | Root access |
+| `http://localhost/campusEventHub/public/` | Direct public folder access |
 
-Enable `mod_rewrite` and set `AllowOverride All` for your htdocs directory.
+## 9. Database Setup
 
-### 5. Open the site
+| File | Purpose |
+|------|---------|
+| `database/schema.sql` | Creates tables and relationships |
+| `database/seed.sql` | Inserts demo data |
+| `database/README.md` | Additional setup notes |
 
-`http://localhost/your-folder-name/`
+Import order: schema first, seed second.
 
-The app detects the folder name automatically. No hardcoded path is required in PHP code.
-
-### Static images
-
-Marketing images live under `public/assets/images/`. Views use the `asset()` and `campus_static_image()` helpers. Do not hardcode `/assets/...` paths in templates.
-
-See `public/assets/images/README.md` for file names and landing page usage.
-
-| File / folder | Purpose |
-|---------------|---------|
-| `logo.png` | Header, footer, auth pages, dashboard, PDF tickets |
-| `hero-right.jpg`, `EVENT-MANAGEMENT.jpg`, etc. | Landing page sections (see images README) |
-| `events/` | Admin-uploaded event images |
-
-### Event image upload (admin)
-
-- Form: **Create/Edit Event**, field name `image`
-- Allowed: JPG, PNG, WEBP, **max 2 MB**
-- Saved under `public/assets/images/events/` with a unique filename stored in the database
-- Validation: extension allow-list, MIME check via `finfo`, `move_uploaded_file()` only
-
-Implemented in `app/services/EventImageUpload.php`.
-
-### Ticket PDF download
-
-- Route: `GET /tickets/{id}/download` (use `url()` in views)
-- **Users:** approved tickets only; must own the ticket
-- **Admins:** any approved ticket from the admin ticket detail page
-- Library: FPDF in `app/lib/fpdf/` (no Composer)
-- Filename pattern: `ticket_CEH-{ticket_id}-{event_id}-{user_id}.pdf`
-
-## Demo credentials
+## 10. Demo Accounts
 
 | Role | Email | Password |
 |------|-------|----------|
 | Admin | admin@eventhub.test | Admin@123 |
 | User | user@eventhub.test | User@123 |
 
-## Folder structure
+## 11. Responsible AI Use Statement
 
-```text
-app/
-  config/       Environment, database, Longcat settings
-  core/         Router, Auth, CSRF, Validator, Session, Helpers
-  controllers/  HTTP actions
-  models/       Database access (PDO)
-  services/     LongcatService, EventImageUpload, TicketPdfService
-  lib/fpdf/     FPDF library for ticket PDFs
-  views/        PHP templates
-public/
-  index.php     Front controller
-  assets/       CSS, JS, images
-database/
-  schema.sql, seed.sql, migrate-local.php
-docs/           Proposal, design, security, tests, AI governance
-tests/          Manual checklist and results template
-```
+AI-generated content requires human review before saving or publishing.
 
-## Deployment notes
+AI is used for Smart Help Assistant and AI Event Draft Assistant. AI output is not automatically published. Sensitive data such as passwords and ticket attendee details is not sent to AI services. If AI API is unavailable, fallback responses are used.
 
-1. Upload all project files to hosting.
-2. Point the site to the project root (root `.htaccess` forwards to `public/`) **or** set the document root to `public/`.
-3. Copy `.env` with production values; set `APP_DEBUG=false`.
-4. Import the database on the host.
-5. Confirm `app/`, `database/`, and `docs/` are not publicly accessible (`.htaccess` blocks direct access).
+## 12. Security Features
 
-## AI use statement
+| Security Control | Implementation |
+|------------------|----------------|
+| Password hashing | `password_hash` and `password_verify` |
+| PDO prepared statements | Query parameter binding across models |
+| CSRF protection | Token validation on POST requests |
+| Output escaping | Centralized escaping helper in views |
+| Role-based access | Admin/user guards in auth layer and controllers |
+| File upload validation | Extension, MIME, and size validation for event images |
+| PDF ownership checks | User can download only own approved ticket; admin can download approved tickets |
+| Activity logs | Records key workflow actions |
+| AI logs | Records AI inputs, outputs, and reviewed acceptance states |
 
-This project includes **optional** AI features powered by Longcat when API credentials are set in `.env`. If credentials are missing, **local fallback** responses are used so the site works fully offline.
+## 13. Documentation Pack
 
-AI is used for:
+| Document | Purpose |
+|----------|---------|
+| Project Proposal | Project scope, users, and implementation plan |
+| System Design | Architecture, modules, and data flow |
+| Security and Risk Register | Security controls and identified risks |
+| Test Evidence | Manual test coverage and result records |
+| AI Governance Appendix | Responsible AI behavior, limits, and review rules |
 
-1. **Event draft suggestions** (admin only). Not auto-published to events.
-2. **Help answer polishing** (FAQ text only). Not for general chat.
+## 14. Testing
 
-## Responsible AI statement
+Testing resources are in the `tests` folder and related docs files. The project includes a manual test checklist, a test results template, positive and negative test cases, and coverage for major workflows such as auth, events, tickets, PDF download, announcements, and AI flows.
 
-- AI output is **never** saved to events or announcements automatically.
-- Admins must review and click **Accept Reviewed Draft** before `final_text` is stored in `ai_logs`.
-- This disclaimer appears on AI screens and responses:
+## 15. Deployment Notes
 
-  **"AI-generated content requires human review before saving or publishing."**
+Set `APP_DEBUG=false` on live hosting. Use strong database credentials. Keep `.env` private. Ensure the image upload folder is writable. Use HTTPS if available. Do not commit real API keys.
 
-- Ticket personal details (attendee names, emails) are **never** sent to AI.
-- AI suggestions are logged in `ai_logs` for accountability.
+## 16. Known Limitations
 
-Full policy: `docs/ai-governance.md`
+| Limitation | Current Status |
+|------------|----------------|
+| AI fallback mode | AI can run in fallback mode if API is not configured |
+| Email notifications | Not implemented |
+| Online payment system | Not implemented |
+| Live QR scanner | PDF uses ticket code but not a live QR scanner |
+| Public announcements complexity | Public announcements page is intentionally simple for current data volume |
 
-## Known limitations
+## 17. Git Workflow
 
-- WEBP event images may use a placeholder in PDFs if PHP GD cannot convert them.
-- Help assistant only answers Campus EventHub usage questions from FAQ data.
-- Anonymous help users are not stored in `ai_logs` (logged-in users only).
-- No email notifications for ticket status changes.
+The project follows meaningful commits, feature-branch development, and pull request review. README and documentation files are maintained as assessment evidence.
 
-## Team roles (example for group projects)
+## 18. Final Summary
 
-| Role | Responsibilities |
-|------|------------------|
-| Backend developer | Models, controllers, security, database |
-| Frontend developer | Views, CSS, client validation |
-| AI / documentation | LongcatService, governance docs, test cases |
-| QA / DevOps | XAMPP setup, deployment, manual testing |
-
-Adjust names on your submission cover sheet.
-
-## Git workflow (recommended)
-
-```text
-main          Stable submission branch
-develop       Integration branch
-feature/*     One feature per branch (e.g. feature/ai-draft)
-```
-
-1. Create a branch per assessment task.
-2. Commit with clear messages (e.g. `feat: add AI draft human review`).
-3. Merge to `develop`, test on XAMPP, then merge to `main`.
-4. Do not commit `.env`. Only commit `.env.example`.
-
-## Testing
-
-| Resource | Location |
-|----------|----------|
-| Test case specifications | `docs/test-cases.md` |
-| Manual checklist | `tests/manual-test-checklist.md` |
-| Results template | `tests/test-results-template.md` |
-
-## Screenshots (for your report)
-
-Add screenshots here before submission:
-
-1. Home page
-2. Events listing with filters
-3. Admin dashboard
-4. AI Event Draft review step
-5. Help assistant answer with disclaimer
-6. Activity logs
-
-## Licence
-
-Educational assessment use only.
+Campus EventHub demonstrates full-stack web development, secure coding, database-driven workflows, responsive UI, responsible AI integration, and documentation required for the assessment.
